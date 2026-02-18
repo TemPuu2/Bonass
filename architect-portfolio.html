@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jonathan Ibekwe — Award-winning architect shaping cities through structural poetry, material precision, and radical spatial thinking." />
+  <title>Jonathan Ibekwe — Architect</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Neue+Haas+Grotesk+Display+Pro:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Fallback font stack used in CSS -->
+
+  <style>
+    /* ==============================
+       DESIGN TOKENS & RESET
+    ============================== */
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #181818;
+      --surface: #1e1e1e;
+      --line: rgba(255,255,255,0.08);
+      --line-strong: rgba(255,255,255,0.18);
+      --text: #e8e4de;
+      --text-muted: rgba(232,228,222,0.45);
+      --text-dim: rgba(232,228,222,0.22);
+      --accent: #c8a96e;
+      --accent2: #8fb3a8;
+      --white: #f5f1eb;
+      --serif: 'Cormorant Garamond', 'Georgia', serif;
+      --mono: 'DM Mono', 'Courier New', monospace;
+      --sans: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --radius: 2px;
+      --transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-fast: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    [data-theme="light"] {
+      --bg: #f5f1eb;
+      --bg2: #ede9e3;
+      --bg3: #e4e0da;
+      --surface: #dedad4;
+      --line: rgba(0,0,0,0.08);
+      --line-strong: rgba(0,0,0,0.18);
+      --text: #1a1814;
+      --text-muted: rgba(26,24,20,0.5);
+      --text-dim: rgba(26,24,20,0.25);
+      --accent: #9a6f2e;
+      --accent2: #3d7068;
+      --white: #1a1814;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.5;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    /* ==============================
+       CUSTOM CURSOR
+    ============================== */
+    #cursor-dot {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+    #cursor-ring {
+      position: fixed; top: 0; left: 0; z-index: 9998;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(200,169,110,0.5);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease, width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    body:has(a:hover) #cursor-dot,
+    body:has(button:hover) #cursor-dot { width: 12px; height: 12px; }
+    body:has(a:hover) #cursor-ring,
+    body:has(button:hover) #cursor-ring { width: 56px; height: 56px; border-color: var(--accent); }
+
+    /* ==============================
+       ANIMATED CANVAS BACKGROUND
+    ============================== */
+    #arch-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0; pointer-events: none;
+      opacity: 0.18;
+    }
+    [data-theme="light"] #arch-canvas { opacity: 0.09; }
+
+    /* ==============================
+       TYPOGRAPHY
+    ============================== */
+    .t-display {
+      font-family: var(--serif);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 0.92;
+    }
+    .t-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .t-body {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+    }
+    .t-accent-line {
+      width: 32px; height: 1px;
+      background: var(--accent);
+      display: inline-block; vertical-align: middle;
+      margin-right: 12px;
+    }
+
+    /* ==============================
+       LAYOUT
+    ============================== */
+    .container {
+      width: 100%; max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 5vw;
+    }
+    section { position: relative; z-index: 2; }
+
+    /* ==============================
+       SCROLL REVEAL
+    ============================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.35s; }
+    .reveal-delay-4 { transition-delay: 0.5s; }
+
+    /* ==============================
+       NAV
+    ============================== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 28px 5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background var(--transition), padding var(--transition);
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      padding: 18px 5vw;
+      border-bottom: 1px solid var(--line);
+    }
+    [data-theme="light"] nav.scrolled {
+      background: rgba(245,241,235,0.88);
+    }
+    .nav-logo {
+      font-family: var(--serif); font-size: 1.2rem; font-weight: 300;
+      letter-spacing: 0.06em; color: var(--text); text-decoration: none;
+      position: relative;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex; align-items: center; gap: 3rem; list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.7rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform var(--transition-fast);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+    .theme-toggle {
+      background: none; border: 1px solid var(--line-strong);
+      color: var(--text-muted); padding: 8px 14px;
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+      cursor: none; transition: all var(--transition-fast);
+      text-transform: uppercase;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-cta {
+      background: var(--accent); color: var(--bg);
+      border: none; padding: 10px 22px;
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em;
+      text-transform: uppercase; cursor: none;
+      text-decoration: none;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+      display: inline-block;
+    }
+    .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 1px;
+      background: var(--text); transition: all var(--transition-fast);
+    }
+
+    /* ==============================
+       HERO
+    ============================== */
+    #hero {
+      height: 100vh; min-height: 700px;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 10vh;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 1;
+      background: 
+        linear-gradient(to bottom, transparent 40%, var(--bg) 95%),
+        linear-gradient(135deg, #0f1012 0%, #151718 50%, #0d0e10 100%);
+    }
+    .hero-image {
+      position: absolute; inset: 0; z-index: 0;
+      background: url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1800&q=80') center/cover no-repeat;
+      opacity: 0.22;
+      transform: scale(1.05);
+      transition: transform 12s ease;
+    }
+    [data-theme="light"] .hero-image { opacity: 0.1; }
+    #hero:hover .hero-image { transform: scale(1.08); }
+    .hero-content {
+      position: relative; z-index: 3;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 3rem;
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(4rem, 10vw, 10rem);
+      font-weight: 300;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-sub {
+      margin-top: 2.5rem;
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      color: var(--text-muted);
+      font-weight: 300;
+      max-width: 520px;
+      letter-spacing: 0.01em;
+    }
+    .hero-actions {
+      margin-top: 3rem;
+      display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 14px;
+      background: var(--accent); color: var(--bg);
+      text-decoration: none; padding: 16px 34px;
+      font-family: var(--mono); font-size: 0.7rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      transition: all var(--transition-fast);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+    }
+    .btn-primary:hover::before { transform: translateX(0); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(200,169,110,0.25); }
+    .btn-arrow { font-size: 1rem; transition: transform var(--transition-fast); }
+    .btn-primary:hover .btn-arrow { transform: translateX(4px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--text-muted); text-decoration: none;
+      font-family: var(--mono); font-size: 0.7rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      border-bottom: 1px solid var(--line-strong);
+      padding-bottom: 2px;
+      transition: all var(--transition-fast);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+    .hero-stats {
+      position: absolute; right: 5vw; bottom: 10vh; z-index: 3;
+      display: flex; flex-direction: column; gap: 2.5rem;
+    }
+    .stat-item { text-align: right; }
+    .stat-num {
+      font-family: var(--serif); font-size: 2.8rem;
+      font-weight: 300; line-height: 1;
+      color: var(--white);
+    }
+    .stat-num span { color: var(--accent); font-size: 1.4rem; vertical-align: super; }
+    .stat-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
+    .hero-scroll-hint {
+      position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%);
+      z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--accent));
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    /* ==============================
+       MARQUEE TICKER
+    ============================== */
+    .ticker {
+      background: var(--accent);
+      padding: 12px 0;
+      overflow: hidden;
+      position: relative; z-index: 2;
+    }
+    .ticker-inner {
+      display: flex; gap: 0;
+      animation: ticker 30s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-text {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--bg); padding: 0 3rem;
+      flex-shrink: 0;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ==============================
+       SECTION HEADERS
+    ============================== */
+    .section-header { margin-bottom: 6rem; }
+    .section-number {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-number::before {
+      content: ''; display: block; width: 40px; height: 1px; background: var(--accent);
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 5vw, 5.5rem);
+      font-weight: 300; line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* ==============================
+       PROFILE SECTION
+    ============================== */
+    #profile { padding: 14vh 0; background: var(--bg); }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8vw; align-items: start;
+    }
+    .profile-image-wrap {
+      position: sticky; top: 20vh;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+    }
+    .profile-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(20%) contrast(1.05);
+      transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+    .profile-image-wrap:hover .profile-img { transform: scale(1.03); }
+    .profile-image-caption {
+      margin-top: 1.2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .profile-content { padding-top: 2rem; }
+    .profile-name {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 6vw, 6.5rem);
+      font-weight: 300; line-height: 0.95;
+      letter-spacing: -0.03em; margin-bottom: 1.5rem;
+    }
+    .profile-name em { font-style: italic; display: block; color: var(--accent); }
+    .profile-positioning {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1.3rem; font-weight: 300;
+      color: var(--text-muted); margin-bottom: 3rem;
+      line-height: 1.5; max-width: 400px;
+    }
+    .profile-bio { margin-bottom: 3.5rem; }
+    .profile-bio p {
+      font-family: var(--sans); font-size: 0.92rem;
+      line-height: 1.85; color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .credentials-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--line);
+      margin-top: 3rem; border: 1px solid var(--line);
+    }
+    .credential-item {
+      background: var(--bg);
+      padding: 1.4rem 1.6rem;
+      transition: background var(--transition-fast);
+    }
+    .credential-item:hover { background: var(--bg2); }
+    .cred-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .cred-value { font-family: var(--sans); font-size: 0.82rem; color: var(--text); }
+
+    /* ==============================
+       PROJECTS
+    ============================== */
+    #projects { padding: 14vh 0; background: var(--bg2); }
+    .filter-bar {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 5rem; flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+    }
+    .filter-btn {
+      background: none; border: none;
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); padding: 14px 28px;
+      cursor: none; transition: all var(--transition-fast);
+      position: relative;
+    }
+    .filter-btn::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 2px; background: var(--accent);
+      transform: scaleX(0); transition: transform var(--transition-fast);
+    }
+    .filter-btn.active, .filter-btn:hover { color: var(--text); }
+    .filter-btn.active::after, .filter-btn:hover::after { transform: scaleX(1); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2px;
+    }
+    .project-card {
+      position: relative; overflow: hidden;
+      cursor: none; background: var(--bg3);
+      transition: transform var(--transition);
+    }
+    .project-card:nth-child(1) { grid-column: span 8; aspect-ratio: 16/10; }
+    .project-card:nth-child(2) { grid-column: span 4; aspect-ratio: 3/4; }
+    .project-card:nth-child(3) { grid-column: span 4; aspect-ratio: 3/4; }
+    .project-card:nth-child(4) { grid-column: span 8; aspect-ratio: 16/10; }
+    .project-card:nth-child(5) { grid-column: span 6; aspect-ratio: 4/3; }
+    .project-card:nth-child(6) { grid-column: span 6; aspect-ratio: 4/3; }
+    .project-card .card-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16,1,0.3,1), filter 0.5s;
+      filter: grayscale(15%);
+    }
+    .project-card:hover .card-img {
+      transform: scale(1.06);
+      filter: grayscale(0%);
+    }
+    .card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%);
+      transition: opacity var(--transition-fast);
+    }
+    .card-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2.5rem;
+      transform: translateY(8px);
+      transition: transform var(--transition);
+    }
+    .project-card:hover .card-info { transform: translateY(0); }
+    .card-category {
+      font-family: var(--mono); font-size: 0.58rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .card-title {
+      font-family: var(--serif); font-size: clamp(1.2rem, 2.5vw, 2rem);
+      font-weight: 300; color: #fff; line-height: 1.1;
+    }
+    .card-meta {
+      font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.15em; color: rgba(255,255,255,0.45);
+      margin-top: 8px;
+    }
+    .card-hover-reveal {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 70px; height: 70px; border-radius: 50%;
+      background: var(--accent); color: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0; transition: all var(--transition-fast);
+    }
+    .project-card:hover .card-hover-reveal { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    /* Project Modal */
+    .project-modal {
+      display: none;
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+    .project-modal.active { display: block; }
+    .modal-close {
+      position: fixed; top: 28px; right: 5vw; z-index: 501;
+      background: none; border: 1px solid var(--line-strong);
+      color: var(--text); padding: 10px 20px;
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; cursor: none;
+      transition: all var(--transition-fast);
+    }
+    .modal-close:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .modal-hero {
+      height: 70vh; position: relative; overflow: hidden;
+    }
+    .modal-hero img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .modal-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, var(--bg) 0%, transparent 60%);
+    }
+    .modal-body {
+      padding: 4rem 5vw 10rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .modal-title {
+      font-family: var(--serif); font-size: clamp(3rem, 6vw, 6rem);
+      font-weight: 300; line-height: 0.95; margin-bottom: 4rem;
+      letter-spacing: -0.02em;
+    }
+    .modal-grid {
+      display: grid; grid-template-columns: 2fr 1fr; gap: 6rem;
+    }
+    .modal-section-title {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .modal-section-title::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+    .modal-text {
+      font-family: var(--sans); font-size: 0.95rem;
+      line-height: 1.85; color: var(--text-muted);
+      margin-bottom: 3rem;
+    }
+    .modal-specs { list-style: none; }
+    .modal-specs li {
+      display: flex; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--line);
+      font-family: var(--mono); font-size: 0.72rem;
+    }
+    .spec-key { color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; }
+    .spec-val { color: var(--text); }
+
+    /* ==============================
+       PHILOSOPHY
+    ============================== */
+    #philosophy { padding: 14vh 0; background: var(--bg); }
+    .philosophy-intro {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8vw; margin-bottom: 10rem;
+      align-items: end;
+    }
+    .philosophy-quote {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+      font-weight: 300; line-height: 1.25;
+      letter-spacing: -0.01em; color: var(--text);
+    }
+    .philosophy-quote cite {
+      display: block; font-style: normal;
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-top: 1.5rem;
+    }
+    .process-timeline { position: relative; }
+    .timeline-line {
+      position: absolute; left: 16px; top: 0; bottom: 0;
+      width: 1px; background: var(--line);
+    }
+    .timeline-item {
+      display: flex; gap: 3rem;
+      padding-bottom: 4rem;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid var(--accent); background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 4px;
+      transition: background var(--transition-fast);
+      position: relative; z-index: 1;
+    }
+    .timeline-dot::after {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+    }
+    .timeline-item:hover .timeline-dot { background: var(--accent); }
+    .timeline-item:hover .timeline-dot::after { background: var(--bg); }
+    .timeline-content h4 {
+      font-family: var(--serif); font-size: 1.4rem; font-weight: 300;
+      margin-bottom: 0.75rem;
+    }
+    .timeline-content p { font-family: var(--sans); font-size: 0.88rem; line-height: 1.75; color: var(--text-muted); }
+    .process-phase {
+      font-family: var(--mono); font-size: 0.58rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .blueprint-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+      margin-top: 8rem;
+    }
+    .blueprint-item {
+      aspect-ratio: 4/3; overflow: hidden;
+      position: relative; background: var(--bg3);
+    }
+    .blueprint-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(30%) contrast(1.1);
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.4s;
+    }
+    .blueprint-item:hover img { transform: scale(1.05); filter: grayscale(0%) contrast(1.05); }
+    .blueprint-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    }
+
+    /* ==============================
+       AWARDS
+    ============================== */
+    #awards { padding: 14vh 0; background: var(--bg2); }
+    .awards-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; margin-top: 5rem;
+    }
+    .award-card {
+      background: var(--bg3);
+      padding: 3rem 2.5rem;
+      border: 1px solid var(--line);
+      transition: all var(--transition-fast);
+      position: relative; overflow: hidden;
+    }
+    .award-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--accent);
+      transition: height 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .award-card:hover::before { height: 100%; }
+    .award-card:hover { background: var(--surface); border-color: var(--line-strong); }
+    .award-year {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.25em; color: var(--accent); margin-bottom: 1.2rem;
+    }
+    .award-title {
+      font-family: var(--serif); font-size: 1.4rem; font-weight: 300;
+      margin-bottom: 0.75rem; line-height: 1.2;
+    }
+    .award-org { font-family: var(--sans); font-size: 0.8rem; color: var(--text-dim); }
+    .press-logos {
+      margin-top: 8rem; padding-top: 5rem;
+      border-top: 1px solid var(--line);
+    }
+    .press-label { text-align: center; margin-bottom: 3rem; }
+    .logos-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 5rem; flex-wrap: wrap;
+    }
+    .press-logo {
+      font-family: var(--serif); font-size: 1.1rem;
+      color: var(--text-dim); letter-spacing: 0.06em;
+      transition: color var(--transition-fast);
+      font-style: italic;
+    }
+    .press-logo:hover { color: var(--text); }
+
+    /* ==============================
+       TESTIMONIALS
+    ============================== */
+    #testimonials { padding: 14vh 0; background: var(--bg); overflow: hidden; }
+    .testimonials-track-wrap { position: relative; }
+    .testimonials-track {
+      display: flex; gap: 3rem;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
+    }
+    .testimonial-card {
+      min-width: 500px; max-width: 500px;
+      background: var(--bg2); border: 1px solid var(--line);
+      padding: 3rem;
+      flex-shrink: 0;
+    }
+    .testimonial-quote-mark {
+      font-family: var(--serif); font-size: 5rem; line-height: 0.6;
+      color: var(--accent); margin-bottom: 1.5rem; display: block;
+    }
+    .testimonial-text {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1.1rem; line-height: 1.65; font-weight: 300;
+      color: var(--text); margin-bottom: 2rem;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+    .testimonial-avatar {
+      width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
+      background: var(--bg3);
+    }
+    .testimonial-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .testimonial-name {
+      font-family: var(--sans); font-size: 0.85rem; color: var(--text);
+    }
+    .testimonial-role {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim); margin-top: 2px;
+    }
+    .testimonial-nav {
+      display: flex; gap: 1rem; margin-top: 3rem;
+      justify-content: center;
+    }
+    .t-nav-btn {
+      width: 48px; height: 48px;
+      background: none; border: 1px solid var(--line-strong);
+      color: var(--text-muted); font-size: 1.1rem;
+      cursor: none; transition: all var(--transition-fast);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .t-nav-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+    /* ==============================
+       CONTACT
+    ============================== */
+    #contact { padding: 14vh 0; background: var(--bg); }
+    .contact-closing {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 7vw, 7rem);
+      font-weight: 300; line-height: 0.95;
+      letter-spacing: -0.03em; margin-bottom: 6rem;
+      max-width: 900px;
+    }
+    .contact-closing em { font-style: italic; color: var(--accent); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8vw;
+    }
+    .contact-form { }
+    .form-group { margin-bottom: 2.5rem; }
+    .form-label {
+      display: block; font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 10px;
+    }
+    .form-input, .form-textarea {
+      width: 100%; background: none;
+      border: none; border-bottom: 1px solid var(--line-strong);
+      padding: 12px 0; color: var(--text);
+      font-family: var(--sans); font-size: 0.95rem;
+      outline: none; transition: border-color var(--transition-fast);
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+    .form-textarea { resize: none; height: 120px; }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+    .contact-info { }
+    .info-item { margin-bottom: 3rem; }
+    .info-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .info-value { font-family: var(--serif); font-size: 1.1rem; color: var(--text); }
+    .info-value a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--line); transition: border-color var(--transition-fast); }
+    .info-value a:hover { border-color: var(--accent); }
+    .social-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 3rem; }
+    .social-link {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+      transition: all var(--transition-fast);
+    }
+    .social-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ==============================
+       FOOTER
+    ============================== */
+    footer {
+      background: var(--bg3);
+      border-top: 1px solid var(--line);
+      padding: 3rem 5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+      position: relative; z-index: 2;
+    }
+    .footer-logo { font-family: var(--serif); font-size: 1.1rem; font-weight: 300; letter-spacing: 0.06em; }
+    .footer-copy { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--text-dim); }
+
+    /* ==============================
+       MOBILE NAV OVERLAY
+    ============================== */
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--serif); font-size: 2.5rem;
+      font-weight: 300; color: var(--text); text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .mobile-nav a:hover { color: var(--accent); }
+    .mobile-close {
+      position: absolute; top: 28px; right: 5vw;
+      background: none; border: none; color: var(--text);
+      font-size: 1.5rem; cursor: none;
+    }
+
+    /* ==============================
+       RESPONSIVE
+    ============================== */
+    @media (max-width: 1100px) {
+      .awards-grid { grid-template-columns: repeat(2, 1fr); }
+      .blueprint-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .profile-grid,
+      .philosophy-intro,
+      .contact-grid,
+      .modal-grid { grid-template-columns: 1fr; gap: 4rem; }
+      .profile-image-wrap { position: relative; top: auto; aspect-ratio: 4/3; }
+      .hero-stats { display: none; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card:nth-child(n) {
+        grid-column: span 1 !important;
+        aspect-ratio: 16/10 !important;
+      }
+      .testimonial-card { min-width: 320px; max-width: 320px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions .theme-toggle, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .awards-grid { grid-template-columns: 1fr; }
+      .blueprint-grid { grid-template-columns: 1fr; }
+      .credentials-grid { grid-template-columns: 1fr; }
+      .logos-row { gap: 2.5rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .filter-bar { overflow-x: auto; flex-wrap: nowrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ANIMATED CANVAS BACKGROUND -->
+  <canvas id="arch-canvas"></canvas>
+
+  <!-- NAVIGATION -->
+  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+    <a href="#" class="nav-logo">Jonathan <span>Ibekwe</span></a>
+    <ul class="nav-links" role="list">
+      <li><a href="#profile">Profile</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#philosophy">Philosophy</a></li>
+      <li><a href="#awards">Awards</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
+      <a href="#contact" class="nav-cta">Collaborate</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Mobile navigation">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="#profile" class="mobile-link">Profile</a>
+    <a href="#projects" class="mobile-link">Projects</a>
+    <a href="#philosophy" class="mobile-link">Philosophy</a>
+    <a href="#awards" class="mobile-link">Awards</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero" aria-label="Hero section">
+    <div class="hero-bg"></div>
+    <div class="hero-image" role="img" aria-label="Architectural background"></div>
+    <div class="container hero-content">
+      <div class="hero-eyebrow">
+        <span class="t-accent-line" aria-hidden="true"></span>
+        <span class="t-label">Architect · Visionary · Innovator</span>
+      </div>
+      <h1 class="hero-headline">
+        Space is not<br/>
+        empty.<br/>
+        <em>It is intention.</em>
+      </h1>
+      <p class="hero-sub">
+        Architecture that refuses the ordinary — structures born from structural poetry, material truth, and the relentless pursuit of spatial meaning.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">
+          View Signature Projects
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="#contact" class="btn-ghost">Start a Collaboration</a>
+      </div>
+    </div>
+    <div class="hero-stats" aria-label="Key statistics">
+      <div class="stat-item reveal">
+        <div class="stat-num">47<span>+</span></div>
+        <div class="stat-label">Built Works</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-1">
+        <div class="stat-num">23<span>+</span></div>
+        <div class="stat-label">Awards</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-2">
+        <div class="stat-num">18<span>+</span></div>
+        <div class="stat-label">Countries</div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-inner" id="tickerInner">
+      <span class="ticker-text">Residential</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Commercial</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Urban Masterplan</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Cultural</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Conceptual</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Pritzker Prize Shortlisted</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Starchitect Collective 2024</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Bonass Studio</span>
+      <span class="ticker-text">·</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="ticker-text">Residential</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Commercial</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Urban Masterplan</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Cultural</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Conceptual</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Pritzker Prize Shortlisted</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Starchitect Collective 2024</span>
+      <span class="ticker-text">·</span>
+      <span class="ticker-text">Bonass Studio</span>
+      <span class="ticker-text">·</span>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <section id="profile" aria-label="Architect profile">
+    <div class="container" style="padding-top: 14vh; padding-bottom: 14vh;">
+      <div class="profile-grid">
+        <!-- Image -->
+        <div class="reveal">
+          <div class="profile-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&q=80"
+              alt="Portrait of Jonathan Ibekwe, architect"
+              class="profile-img"
+              loading="lazy"
+            />
+          </div>
+          <div class="profile-image-caption">
+            <span class="t-label">Jonathan Ibekwe · Principal Architect</span>
+            <span class="t-label" style="color: var(--accent);">Basel, CH</span>
+          </div>
+        </div>
+        <!-- Content -->
+        <div class="profile-content">
+          <div class="section-number reveal">01 / Profile</div>
+          <h2 class="profile-name reveal reveal-delay-1">
+            Jonathan
+            <em>Ibekwe</em>
+          </h2>
+          <p class="profile-positioning reveal reveal-delay-2">
+            "I build structures that outlast their purpose — spaces where silence and form negotiate endlessly."
+          </p>
+          <div class="profile-bio reveal reveal-delay-3">
+            <p>
+              With over 10 years defining the vanguard of contemporary architecture, Jonathan Ibekwe commands a practice that operates at the precise intersection of structural engineering and spatial philosophy. His buildings don't occupy landscapes — they redefine them.
+            </p>
+            <p>
+              Educated at the University of Uyo and the Architectural Association in Uyo, Akwa Ibom, Ibekwe founded his eponymous studio in 2018. Since then, he has completed forty-seven built works across eighteen countries, ranging from intimate private residences to civic-scale cultural institutions that have shifted the architectural conversation.
+            </p>
+            <p>
+              His methodology is relentlessly material-forward: each project begins with the question of what a site is genuinely asking for, then proceeds through structural honesty to an architecture that feels both inevitable and extraordinary. The result is a body of work that critics consistently describe as "buildings with a conscience."
+            </p>
+          </div>
+          <div class="credentials-grid reveal reveal-delay-4">
+            <div class="credential-item">
+              <div class="cred-label">Education</div>
+              <div class="cred-value">University of Uyo, M.Arch · Uyo</div>
+            </div>
+            <div class="credential-item">
+              <div class="cred-label">Founded</div>
+              <div class="cred-value">Bonass Studio, 2018</div>
+            </div>
+            <div class="credential-item">
+              <div class="cred-label">Recognition</div>
+              <div class="cred-value">Pritzker Shortlist 2023</div>
+            </div>
+            <div class="credential-item">
+              <div class="cred-label">Affiliation</div>
+              <div class="cred-value">Davarch · Uyo Akwa Ibom</div>
+            </div>
+            <div class="credential-item">
+              <div class="cred-label">Teaching</div>
+              <div class="cred-value">University of Uyo School of Architecture</div>
+            </div>
+            <div class="credential-item">
+              <div class="cred-label">Practice Scale</div>
+              <div class="cred-value">100+ projects · 1 country</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" aria-label="Signature projects">
+    <div class="container" style="padding-top: 14vh; padding-bottom: 14vh;">
+      <div class="section-header">
+        <div class="section-number reveal">02 / Work</div>
+        <h2 class="section-title reveal reveal-delay-1">Signature<br/><em>Projects</em></h2>
+      </div>
+      <div class="filter-bar" role="tablist" aria-label="Project filter">
+        <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-btn" data-filter="residential" role="tab" aria-selected="false">Residential</button>
+        <button class="filter-btn" data-filter="commercial" role="tab" aria-selected="false">Commercial</button>
+        <button class="filter-btn" data-filter="urban" role="tab" aria-selected="false">Urban</button>
+        <button class="filter-btn" data-filter="concept" role="tab" aria-selected="false">Concept</button>
+      </div>
+      <div class="projects-grid" role="list">
+
+        <!-- Card 1 -->
+        <article class="project-card reveal" data-category="residential" role="listitem">
+          <img
+            src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80"
+            alt="The Meridian House — Residential project by Jonathan Ibekwe"
+            class="card-img" loading="lazy"
+          />
+          <div class="card-overlay" aria-hidden="true"></div>
+          <div class="card-info">
+            <div class="card-category">Residential · 2022</div>
+            <h3 class="card-title">The Meridian House</h3>
+            <div class="card-meta">Zurich, Switzerland · 4,200 m²</div>
+          </div>
+          <div class="card-hover-reveal" aria-hidden="true">View</div>
+          <button class="project-open" data-project="0" aria-label="Open Meridian House case study" style="position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;"></button>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="project-card reveal reveal-delay-1" data-category="commercial" role="listitem">
+          <img
+            src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80"
+            alt="Nexus Tower — Commercial project"
+            class="card-img" loading="lazy"
+          />
+          <div class="card-overlay" aria-hidden="true"></div>
+          <div class="card-info">
+            <div class="card-category">Commercial · 2021</div>
+            <h3 class="card-title">Nexus Tower</h3>
+            <div class="card-meta">Dubai, UAE · 38 floors</div>
+          </div>
+          <div class="card-hover-reveal" aria-hidden="true">View</div>
+          <button class="project-open" data-project="1" aria-label="Open Nexus Tower case study" style="position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;"></button>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="project-card reveal reveal-delay-2" data-category="urban" role="listitem">
+          <img
+            src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80"
+            alt="Thread Pavilion — Urban project"
+            class="card-img" loading="lazy"
+          />
+          <div class="card-overlay" aria-hidden="true"></div>
+          <div class="card-info">
+            <div class="card-category">Urban · 2023</div>
+            <h3 class="card-title">Thread Pavilion</h3>
+            <div class="card-meta">Seoul, South Korea</div>
+          </div>
+          <div class="card-hover-reveal" aria-hidden="true">View</div>
+          <button class="project-open" data-project="2" aria-label="Open Thread Pavilion case study" style="position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;"></button>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="project-card reveal reveal-delay-3" data-category="commercial" role="listitem">
+          <img
+            src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1200&q=80"
+            alt="The Vessel Cultural Center"
+            class="card-img" loading="lazy"
+          />
+          <div class="card-overlay" aria-hidden="true"></div>
+          <div class="card-info">
+            <div class="card-category">Cultural · 2020</div>
+            <h3 class="card-title">The Vessel Cultural Center</h3>
+            <div class="card-meta">Oslo, Norway · 18,500 m²</div>
+          </div>
+          <div class="card-hover-reveal" aria-hidden="true">View</div>
+          <button class="project-open" data-project="3" aria-label="Open Vessel Cultural Center case study" style="position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;"></button>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="project-card reveal" data-category="concept" role="listitem">
+          <img
+            src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=900&q=80"
+            alt="Strata Concept — Conceptual architecture"
+            class="card-img" loading="lazy"
+          />
+          <div class="card-overlay" aria-hidden="true"></div>
+          <div class="card-info">
+            <div class="card-category">Concept · 2024</div>
+            <h3 class="card-title">Strata Concept</h3>
+            <div class="card-meta">Speculative · Mars Surface Study</div>
+          </div>
+          <div class="card-hover-reveal" aria-hidden="true">View</div>
+          <button class="project-open" data-project="4" aria-label="Open Strata Concept case study" style="position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;"></button>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="project-card reveal reveal-delay-1" data-category="residential" role="listitem">
+          <img
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=80"
+            alt="Echo House — Residential"
+            class="card-img" loading="lazy"
+          />
+          <div class="card-overlay" aria-hidden="true"></div>
+          <div class="card-info">
+            <div class="card-category">Residential · 2019</div>
+            <h3 class="card-title">Echo House</h3>
+            <div class="card-meta">Amalfi Coast, Italy · 680 m²</div>
+          </div>
+          <div class="card-hover-reveal" aria-hidden="true">View</div>
+          <button class="project-open" data-project="5" aria-label="Open Echo House case study" style="position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;"></button>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT MODALS -->
+  <div class="project-modal" id="projectModal" role="dialog" aria-modal="true" aria-label="Project case study">
+    <button class="modal-close" id="modalClose">✕ Close</button>
+    <div class="modal-hero">
+      <img src="" alt="" id="modalImg" loading="lazy" />
+      <div class="modal-hero-overlay"></div>
+    </div>
+    <div class="modal-body">
+      <div class="t-label" id="modalCategory" style="margin-bottom: 1rem;"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-grid">
+        <div class="modal-left">
+          <div class="modal-section-title">Concept Narrative</div>
+          <p class="modal-text" id="modalNarrative"></p>
+          <div class="modal-section-title">Design Challenge</div>
+          <p class="modal-text" id="modalChallenge"></p>
+          <div class="modal-section-title">Structural Innovation</div>
+          <p class="modal-text" id="modalInnovation"></p>
+        </div>
+        <div class="modal-right">
+          <div class="modal-section-title">Project Specs</div>
+          <ul class="modal-specs" id="modalSpecs"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHILOSOPHY -->
+  <section id="philosophy" aria-label="Design philosophy">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-number reveal">03 / Philosophy</div>
+        <h2 class="section-title reveal reveal-delay-1">Process &amp;<br/><em>Method</em></h2>
+      </div>
+      <div class="philosophy-intro">
+        <blockquote class="philosophy-quote reveal">
+          "Every building begins as a question the land is asking. My work is the attempt to answer it honestly — with structure, material, and the courage to leave silence where silence belongs."
+          <cite>— Jonathan Ibekwe, 2024 Serpentine Lecture</cite>
+        </blockquote>
+        <p class="t-body reveal reveal-delay-2" style="max-width: 460px;">
+          Ibekwe's design methodology emerges from a rigorous interrogation of site, program, and material. He rejects the separation of engineering and aesthetics, treating structural logic as the primary generator of architectural form. His process moves through listening, analyzing, proposing, and refining — each phase governed by principles of material honesty, spatial generosity, and long-term environmental responsibility.
+        </p>
+      </div>
+
+      <div class="process-timeline" aria-label="Design process timeline">
+        <div class="timeline-line" aria-hidden="true"></div>
+        <div class="timeline-item reveal">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="process-phase">Phase 01</div>
+            <h4>Site Listening</h4>
+            <p>Every commission begins with extended site visits: measuring shadow, recording ambient sound, cataloging material qualities of the ground. The site is not background. It is the primary author.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-1">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="process-phase">Phase 02</div>
+            <h4>Structural Proposition</h4>
+            <p>Ibekwe writes structural logic before aesthetic intent. Load paths, material behaviors, and environmental forces become the foundational vocabulary of every project — beauty emerges from this discipline, never preceding it.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-2">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="process-phase">Phase 03</div>
+            <h4>Spatial Sequence</h4>
+            <p>Buildings are understood as choreographies of movement and stillness. Light, thresholds, compression and release — each transition is composed with the precision of a musical phrase.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-3">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="process-phase">Phase 04</div>
+            <h4>Material Refinement</h4>
+            <p>Material selection is iterative and obsessive. Samples are evaluated over months, in changing light conditions, tested for aging and wear. The goal is an architecture that improves with time.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="blueprint-grid" aria-label="Process visuals">
+        <div class="blueprint-item reveal">
+          <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=700&q=80" alt="Architectural sketch process" loading="lazy" />
+          <div class="blueprint-caption"><span class="t-label">Sketch Studies</span></div>
+        </div>
+        <div class="blueprint-item reveal reveal-delay-1">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="3D modeling and visualization" loading="lazy" />
+          <div class="blueprint-caption"><span class="t-label">3D Modeling</span></div>
+        </div>
+        <div class="blueprint-item reveal reveal-delay-2">
+          <img src="https://images.unsplash.com/photo-1590859808308-3d2d9c515b1a?w=700&q=80" alt="Construction detail documentation" loading="lazy" />
+          <div class="blueprint-caption"><span class="t-label">Detail Studies</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AWARDS -->
+  <section id="awards" aria-label="Awards and recognition">
+    <div class="container" style="padding-top: 14vh; padding-bottom: 14vh;">
+      <div class="section-header">
+        <div class="section-number reveal">04 / Recognition</div>
+        <h2 class="section-title reveal reveal-delay-1">Awards &amp;<br/><em>Accolades</em></h2>
+      </div>
+      <div class="awards-grid">
+        <div class="award-card reveal">
+          <div class="award-year">2023</div>
+          <h3 class="award-title">Pritzker Architecture Prize — Shortlisted</h3>
+          <div class="award-org">Hyatt Foundation · Chicago</div>
+        </div>
+        <div class="award-card reveal reveal-delay-1">
+          <div class="award-year">2023</div>
+          <h3 class="award-title">RIBA International Award</h3>
+          <div class="award-org">Royal Institute of British Architects</div>
+        </div>
+        <div class="award-card reveal reveal-delay-2">
+          <div class="award-year">2022</div>
+          <h3 class="award-title">World Architecture Festival — Building of the Year</h3>
+          <div class="award-org">WAF · Barcelona</div>
+        </div>
+        <div class="award-card reveal">
+          <div class="award-year">2021</div>
+          <h3 class="award-title">Aga Khan Award for Architecture</h3>
+          <div class="award-org">Aga Khan Development Network</div>
+        </div>
+        <div class="award-card reveal reveal-delay-1">
+          <div class="award-year">2020</div>
+          <h3 class="award-title">AIA Honorary Fellowship</h3>
+          <div class="award-org">American Institute of Architects</div>
+        </div>
+        <div class="award-card reveal reveal-delay-2">
+          <div class="award-year">2019</div>
+          <h3 class="award-title">TIME100 Most Influential — Arts</h3>
+          <div class="award-org">TIME Magazine · New York</div>
+        </div>
+      </div>
+
+      <div class="press-logos reveal">
+        <div class="press-label"><span class="t-label">As Featured In</span></div>
+        <div class="logos-row" aria-label="Press features">
+          <span class="press-logo">Dezeen</span>
+          <span class="press-logo">Architectural Digest</span>
+          <span class="press-logo">Wallpaper*</span>
+          <span class="press-logo">The New York Times</span>
+          <span class="press-logo">Domus</span>
+          <span class="press-logo">Frame</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" aria-label="Client testimonials">
+    <div class="container" style="padding-top: 14vh; padding-bottom: 14vh;">
+      <div class="section-header">
+        <div class="section-number reveal">05 / Voices</div>
+        <h2 class="section-title reveal reveal-delay-1">What <em>Clients</em><br/>Say</h2>
+      </div>
+      <div class="testimonials-track-wrap" style="overflow: hidden;">
+        <div class="testimonials-track" id="testimonialsTrack" role="list">
+          <div class="testimonial-card" role="listitem">
+            <span class="testimonial-quote-mark" aria-hidden="true">"</span>
+            <p class="testimonial-text">Working with Jonathan was an experience unlike any other. He listened to what the land was asking before he listened to what we were asking. The house he built us feels ancient and inevitable — as if it had always been there.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&q=80" alt="Portrait of Marcus Beil" loading="lazy" />
+              </div>
+              <div>
+                <div class="testimonial-name">Marcus Beil</div>
+                <div class="testimonial-role">Private Client · The Meridian House</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card" role="listitem">
+            <span class="testimonial-quote-mark" aria-hidden="true">"</span>
+            <p class="testimonial-text">We commissioned Jonathan to reimagine our corporate headquarters and received something far beyond a building. He gave us a new way of understanding how we work. The tower has changed our culture in ways we couldn't have predicted.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Portrait of Leila Haroun" loading="lazy" />
+              </div>
+              <div>
+                <div class="testimonial-name">Leila Haroun</div>
+                <div class="testimonial-role">CEO · Al Rashid Group · Nexus Tower</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card" role="listitem">
+            <span class="testimonial-quote-mark" aria-hidden="true">"</span>
+            <p class="testimonial-text">Jonathan's cultural centre has become the most visited building in Oslo since its opening. Attendance exceeds any projection we had. But more importantly: the building makes people feel something profound, something we can't fully articulate. That is his genius.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="Portrait of Johan Eriksen" loading="lazy" />
+              </div>
+              <div>
+                <div class="testimonial-name">Johan Eriksen</div>
+                <div class="testimonial-role">Director · National Cultural Ministry · Norway</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card" role="listitem">
+            <span class="testimonial-quote-mark" aria-hidden="true">"</span>
+            <p class="testimonial-text">I have collaborated with fifty architects across my career. Jonathan Ibekwe operates at an entirely different level. He doesn't design buildings. He designs futures. The Strata Concept study reshaped how our entire team thinks about extraterrestrial human habitation.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Portrait of Dr. Amir Khoury" loading="lazy" />
+              </div>
+              <div>
+                <div class="testimonial-name">Dr. Amir Khoury</div>
+                <div class="testimonial-role">Lead Researcher · Space Architecture Initiative</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-nav" role="group" aria-label="Testimonial navigation">
+        <button class="t-nav-btn" id="tPrev" aria-label="Previous testimonial">←</button>
+        <button class="t-nav-btn" id="tNext" aria-label="Next testimonial">→</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" aria-label="Contact">
+    <div class="container" style="padding-top: 14vh; padding-bottom: 14vh;">
+      <div class="section-number reveal">06 / Begin</div>
+      <h2 class="contact-closing reveal reveal-delay-1">
+        Every great building<br/>
+        starts with a<br/>
+        <em>conversation.</em>
+      </h2>
+      <div class="contact-grid">
+        <div class="contact-form reveal">
+          <form novalidate aria-label="Contact form">
+            <div class="form-group">
+              <label class="form-label" for="contact-name">Your Name</label>
+              <input class="form-input" type="text" id="contact-name" name="name" placeholder="Full name" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-email">Email Address</label>
+              <input class="form-input" type="email" id="contact-email" name="email" placeholder="email@domain.com" autocomplete="email" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-project">Project Type</label>
+              <input class="form-input" type="text" id="contact-project" name="project" placeholder="Residential / Commercial / Other" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-message">Your Message</label>
+              <textarea class="form-textarea" id="contact-message" name="message" placeholder="Tell me about your vision..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="border: none; cursor: none;">
+              Send Message <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+        </div>
+        <div class="contact-info reveal reveal-delay-2">
+          <div class="info-item">
+            <div class="info-label">Studio Address</div>
+            <div class="info-value">Shelter Afrik Extention <br/>Uyo, Akwa Ibom</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">New Commissions</div>
+            <div class="info-value"><a href="mailto:bonassstudio@gmail.com">bonassstudio@gmail.com</a></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Press & Media</div>
+            <div class="info-value"><a href="mailto:johnathanibekwe@gmail.com">johnathanibekwe@gmail.com</a></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div class="info-value"><a href="tel:+2318161503027">+234 81 615 030 27</a></div>
+          </div>
+          <div class="social-row" aria-label="Social media links">
+            <a href="#" class="social-link" aria-label="Instagram">Instagram</a>
+            <a href="#" class="social-link" aria-label="LinkedIn">LinkedIn</a>
+            <a href="#" class="social-link" aria-label="Dezeen Profile">Dezeen</a>
+            <a href="#" class="social-link" aria-label="Archdaily Profile">Archdaily</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo">
+    <div class="footer-logo"> <span style="color:var(--accent);">Bonass</span> Studio</div>
+    <div class="footer-copy">© 2024 Bonass Studio · Uyo, Akwa Ibom · All rights reserved</div>
+    <a href="#hero" class="btn-ghost" style="font-size:0.6rem;">Back to Top ↑</a>
+  </footer>
+
+  <!-- ==============================
+       JAVASCRIPT
+  ============================== -->
+  <script>
+    /* ---- Cursor ---- */
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+    document.addEventListener('mouseleave', () => { dot.style.opacity = 0; ring.style.opacity = 0; });
+    document.addEventListener('mouseenter', () => { dot.style.opacity = 1; ring.style.opacity = 1; });
+
+    /* ---- Canvas Architectural Grid ---- */
+    const canvas = document.getElementById('arch-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, lines = [], nodes = [];
+
+    function resizeCanvas() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      buildGrid();
+    }
+
+    function buildGrid() {
+      lines = []; nodes = [];
+      const cols = Math.floor(W / 80), rows = Math.floor(H / 80);
+      // Horizontal lines
+      for (let r = 0; r <= rows; r++) {
+        const y = r * (H / rows);
+        lines.push({ x1: 0, y1: y, x2: W, y2: y, phase: Math.random() * Math.PI * 2, speed: 0.002 + Math.random() * 0.002 });
+      }
+      // Vertical lines
+      for (let c = 0; c <= cols; c++) {
+        const x = c * (W / cols);
+        lines.push({ x1: x, y1: 0, x2: x, y2: H, phase: Math.random() * Math.PI * 2, speed: 0.003 + Math.random() * 0.002 });
+      }
+      // Some diagonal accent lines
+      for (let i = 0; i < 8; i++) {
+        const x1 = Math.random() * W, y1 = Math.random() * H;
+        const len = 80 + Math.random() * 180;
+        const angle = Math.PI * 0.25 * Math.floor(Math.random() * 4);
+        lines.push({
+          x1, y1,
+          x2: x1 + Math.cos(angle) * len,
+          y2: y1 + Math.sin(angle) * len,
+          phase: Math.random() * Math.PI * 2, speed: 0.004
+        });
+      }
+      // Intersection nodes
+      for (let c = 0; c <= cols; c++) {
+        for (let r = 0; r <= rows; r++) {
+          if (Math.random() > 0.85) {
+            nodes.push({ x: c * (W / cols), y: r * (H / rows), phase: Math.random() * Math.PI * 2 });
+          }
+        }
+      }
+    }
+
+    let t = 0;
+    const isDark = () => document.documentElement.getAttribute('data-theme') !== 'light';
+
+    function drawCanvas() {
+      ctx.clearRect(0, 0, W, H);
+      const base = isDark() ? 'rgba(200,169,110,' : 'rgba(80,60,20,';
+      t += 0.005;
+      lines.forEach(l => {
+        const a = 0.04 + 0.03 * Math.sin(t * l.speed * 200 + l.phase);
+        ctx.beginPath();
+        ctx.strokeStyle = base + a + ')';
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(l.x1, l.y1); ctx.lineTo(l.x2, l.y2);
+        ctx.stroke();
+      });
+      nodes.forEach(n => {
+        const a = 0.15 + 0.15 * Math.sin(t * 0.8 + n.phase);
+        const r = 1.5 + 0.8 * Math.sin(t * 1.2 + n.phase);
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = base + a + ')';
+        ctx.fill();
+      });
+      requestAnimationFrame(drawCanvas);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawCanvas();
+
+    /* ---- Nav scroll ---- */
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 80);
+    }, { passive: true });
+
+    /* ---- Theme toggle ---- */
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      themeToggle.textContent = isLight ? 'Light' : 'Dark';
+    });
+
+    /* ---- Mobile nav ---- */
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    });
+    function closeMobileNav() {
+      mobileNav.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+    mobileClose.addEventListener('click', closeMobileNav);
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    /* ---- Scroll reveal ---- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ---- Project filter ---- */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.project-card').forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.style.transition = 'opacity 0.4s, transform 0.4s';
+          card.style.opacity = match ? '1' : '0.2';
+          card.style.transform = match ? '' : 'scale(0.97)';
+          card.style.pointerEvents = match ? '' : 'none';
+        });
+      });
+    });
+
+    /* ---- Project modal data ---- */
+    const projectData = [
+      {
+        title: 'The Meridian House',
+        category: 'Residential · Zurich, Switzerland · 2022',
+        img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80',
+        narrative: 'Positioned on a hillside above Lake Zürich, the Meridian House was conceived as a mediation between the alpine topography and the precise horizontal language of modernist Swiss building. The primary objective was to dissolve the boundary between interior and exterior — to make the mountain an inhabitant of the house.',
+        challenge: 'The 40-degree slope required a structural solution that would appear light from below yet bear the full load of a 4,200 m² programme. A system of tapering concrete blades embedded into the bedrock provided stability while creating the slender silhouette the site demanded. Integration of geothermal systems within the same structural cores reduced the visible technical infrastructure to near zero.',
+        innovation: 'Custom-fabricated cantilever brackets of high-strength weathering steel extend the main living volume 11.4 metres beyond the hillside without visible support — the longest residential cantilever of this section-depth in Europe at the time of completion.',
+        specs: [
+          ['Location', 'Zurich, Switzerland'],
+          ['Area', '4,200 m²'],
+          ['Completion', '2022'],
+          ['Structural System', 'Reinforced concrete blades + weathering steel'],
+          ['Materials', 'Raw concrete, corten steel, Swiss oak, recycled glass'],
+          ['Engineer', 'Schnetzer Puskas Engineers, Basel'],
+          ['Awards', 'RIBA International Award 2023']
+        ]
+      },
+      {
+        title: 'Nexus Tower',
+        category: 'Commercial · Dubai, UAE · 2021',
+        img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80',
+        narrative: 'The Nexus Tower rejects the Dubai skyline\'s tendency toward ornamental exuberance. Instead it proposes a severe minimalism: a 38-floor form defined by the forces acting upon it — wind loads, solar orientation, structural efficiency — expressed without decorative mediation.',
+        challenge: 'Building in a seismic zone with extreme temperature differentials required a façade system capable of both solar shading and thermal expansion accommodation. The diagrid structural skin fulfils both roles, with each node calibrated to absorb movement while maintaining a consistent exterior appearance.',
+        innovation: 'A triple-skin façade with integrated photovoltaic fins generates 34% of the building\'s energy requirement. The geometry of the fins was optimised through 2,400 computational simulations to balance energy yield against wind resistance and daylighting quality.',
+        specs: [
+          ['Location', 'Dubai, UAE'],
+          ['Height', '178 m · 38 floors'],
+          ['Completion', '2021'],
+          ['Structural System', 'Diagrid steel exoskeleton'],
+          ['Façade', 'Triple-skin PV-integrated glass fins'],
+          ['Energy', '34% self-generated'],
+          ['Awards', 'World Architecture Festival — Commercial 2022']
+        ]
+      },
+      {
+        title: 'Thread Pavilion',
+        category: 'Urban · Seoul, South Korea · 2023',
+        img: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600&q=80',
+        narrative: 'Commissioned for the Seoul Architecture Biennale, the Thread Pavilion explores the city as a weave: overlapping infrastructures, histories, and movements that make urban life legible. The 400 m² structure is a physical diagram of Seoul\'s Han River crossings, abstracted into tensile steel threads.',
+        challenge: 'The pavilion needed to be fully demountable, assembled within four days and disassembled within two, while creating an interior spatial quality that rivalled permanent construction. A system of pre-tensioned cable nodes allowed the entire pavilion to be transported in four shipping containers.',
+        innovation: 'Thread anchoring geometry was computed from a three-dimensional network analysis of pedestrian flow patterns recorded across the Han River bridges over 72 hours. The structure is, in its most literal sense, a portrait of the city in motion.',
+        specs: [
+          ['Location', 'Dongdaemun, Seoul'],
+          ['Area', '400 m²'],
+          ['Completion', '2023 (Temporary)'],
+          ['Structural System', 'Pre-tensioned cable net'],
+          ['Material', 'High-grade stainless steel cable, CNC-cut aluminium nodes'],
+          ['Duration', '3-month installation'],
+          ['Visitors', '127,000 over 90 days']
+        ]
+      },
+      {
+        title: 'The Vessel Cultural Center',
+        category: 'Cultural · Oslo, Norway · 2020',
+        img: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1600&q=80',
+        narrative: 'Situated on Oslo\'s waterfront, the Vessel is conceived as a building that holds time. Its primary programme — contemporary art museum, performance hall, public library — is unified by a formal language of containing: walls that curve inward, roofs that press downward, thresholds that slow the visitor\'s movement.',
+        challenge: 'The 18,500 m² building sits within a UNESCO protected harbour zone, constraining height to 22 metres. The programme was accommodated through a complex of partially subterranean volumes connected by a sequence of lightwell-lit atria — the building extends seven metres below the harbour waterline.',
+        innovation: 'The primary structure — a post-tensioned concrete shell — was poured in a single continuous pour over 18 hours, creating a seamless surface without construction joints. The resulting interior is monolithic: ceiling, wall and floor express their shared origin.',
+        specs: [
+          ['Location', 'Aker Brygge, Oslo'],
+          ['Area', '18,500 m²'],
+          ['Completion', '2020'],
+          ['Structural System', 'Monolithic concrete shell'],
+          ['Materials', 'In-situ concrete, Norwegian granite, bronze'],
+          ['Subterranean Depth', '7 m below sea level'],
+          ['Awards', 'Aga Khan Award 2021, RIBA International 2021']
+        ]
+      },
+      {
+        title: 'Strata Concept',
+        category: 'Concept · Speculative · 2024',
+        img: 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=1600&q=80',
+        narrative: 'Developed in collaboration with the Space Architecture Initiative, Strata is a speculative proposal for human habitation in the Valles Marineris region of Mars. The concept derives spatial organisation from the study of subsurface cave systems and geological strata — architecture that does not impose upon the landscape but emerges from within it.',
+        challenge: 'The fundamental challenge of Martian habitation is atmospheric: -63°C average temperature, 0.6% of Earth\'s atmospheric pressure, and intense cosmic radiation require built envelopes of radical protective performance. Strata proposes a solution derived from the planet itself: compacted regolith vaulting, structurally analogous to Roman opus incertum, filled with local basalt aggregate.',
+        innovation: 'A parametric vaulting algorithm generates structural geometry from the specific gravity loads of each subsurface stratum, producing a differentiated surface that responds to its geological context rather than imposing a predetermined form. Every square centimetre is structurally justified.',
+        specs: [
+          ['Location', 'Valles Marineris, Mars (Speculative)'],
+          ['Capacity', '120 inhabitants'],
+          ['Status', 'Concept · Under Development'],
+          ['Structural System', 'Regolith compaction vaulting'],
+          ['Materials', 'Martian basalt aggregate, pressurised ETFE membranes'],
+          ['Partner', 'Space Architecture Initiative, ESA Consulting'],
+          ['Publication', 'Architectural Review, Spring 2024']
+        ]
+      },
+      {
+        title: 'Echo House',
+        category: 'Residential · Amalfi Coast, Italy · 2019',
+        img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80',
+        narrative: 'Carved into the limestone face of the Amalfi coastline, Echo House makes the Mediterranean the primary spatial element of every room. The brief was radical in its economy: 680 m², no formal garden, no swimming pool. Instead, a series of terraced volumes connected by narrow stone staircases, each oriented to a specific view of sea and sky.',
+        challenge: 'Construction on an active coastal cliff required a complete restraint from heavy equipment — all materials were transported by traditional boat and mule train, the same logistics that built the centuries-old villages nearby. This constraint became a creative generative force.',
+        innovation: 'Load-bearing walls of locally quarried travertine are bonded with a lime mortar mix developed in collaboration with the Politecnico di Milano, designed to achieve structural adequacy while remaining visually indistinguishable from historic vernacular construction. The building is a continuation of its cliff.',
+        specs: [
+          ['Location', 'Amalfi Coast, Italy'],
+          ['Area', '680 m²'],
+          ['Completion', '2019'],
+          ['Structural System', 'Load-bearing travertine masonry'],
+          ['Materials', 'Local travertine, lime mortar, terracotta, bronzed steel'],
+          ['Construction', 'Traditional craft methods only'],
+          ['Awards', 'Wallpaper* Architects\' Directory — Residential 2020']
+        ]
+      }
+    ];
+
+    /* ---- Open modal ---- */
+    document.querySelectorAll('.project-open').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.dataset.project);
+        const d = projectData[i];
+        const modal = document.getElementById('projectModal');
+        document.getElementById('modalImg').src = d.img;
+        document.getElementById('modalImg').alt = d.title;
+        document.getElementById('modalCategory').textContent = d.category;
+        document.getElementById('modalTitle').textContent = d.title;
+        document.getElementById('modalNarrative').textContent = d.narrative;
+        document.getElementById('modalChallenge').textContent = d.challenge;
+        document.getElementById('modalInnovation').textContent = d.innovation;
+        const specsList = document.getElementById('modalSpecs');
+        specsList.innerHTML = d.specs.map(([k, v]) => `<li><span class="spec-key">${k}</span><span class="spec-val">${v}</span></li>`).join('');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        modal.scrollTop = 0;
+      });
+    });
+    document.getElementById('modalClose').addEventListener('click', () => {
+      document.getElementById('projectModal').classList.remove('active');
+      document.body.style.overflow = '';
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.getElementById('projectModal').classList.remove('active');
+        document.getElementById('mobileNav').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    /* ---- Testimonials carousel ---- */
+    const track = document.getElementById('testimonialsTrack');
+    const cards = track.querySelectorAll('.testimonial-card');
+    let current = 0;
+    function setTestimonial(idx) {
+      const cardW = cards[0].offsetWidth + 48; // gap
+      track.style.transform = `translateX(-${idx * cardW}px)`;
+      current = idx;
+    }
+    document.getElementById('tPrev').addEventListener('click', () => {
+      setTestimonial(current > 0 ? current - 1 : cards.length - 1);
+    });
+    document.getElementById('tNext').addEventListener('click', () => {
+      setTestimonial(current < cards.length - 1 ? current + 1 : 0);
+    });
+    // Auto-advance
+    setInterval(() => {
+      setTestimonial(current < cards.length - 1 ? current + 1 : 0);
+    }, 6000);
+
+    /* ---- Contact form submit ---- */
+    document.querySelector('form').addEventListener('submit', e => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.textContent = 'Sent ✓';
+      btn.style.background = '#4a9e7e';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerHTML = 'Send Message <span class="btn-arrow">→</span>';
+        btn.style.background = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    });
+
+    /* ---- Parallax hero image ---- */
+    window.addEventListener('scroll', () => {
+      const heroImg = document.querySelector('.hero-image');
+      if (heroImg) {
+        const scrolled = window.scrollY;
+        heroImg.style.transform = `scale(1.05) translateY(${scrolled * 0.3}px)`;
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
